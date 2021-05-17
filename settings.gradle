@@ -1,0 +1,5 @@
+rootProject.name='JRouter'
+include ':app'
+include ':annotation'
+include ':home_module'
+include ':anno_processor'
