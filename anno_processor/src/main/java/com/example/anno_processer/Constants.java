@@ -15,7 +15,7 @@ public class Constants {
 
     public static final String JPostcard = "com.example.jrouterapi.JPostcard";
 
-    //JRouter$RouteMap$
+    //JRouter$$RouteMap$$
     public static final String CLASS_ROUTE_MAP_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "RouterMap" + CLASS_NAME_DIVIDER;
     //生成的辅助类的包名
     public static final String PACKAGE_NAME_PREFIX = "com.example.jrouter";

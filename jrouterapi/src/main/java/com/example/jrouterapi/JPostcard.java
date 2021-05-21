@@ -7,7 +7,13 @@ package com.example.jrouterapi;
  * 封装路由信息
  */
 public class JPostcard {
-    String path;
     String group;
+    String path;
     Class<?> targetClass;
+
+    public JPostcard(String group, String path, Class<?> targetClass) {
+        this.group = group;
+        this.path = path;
+        this.targetClass = targetClass;
+    }
 }

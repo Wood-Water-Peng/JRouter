@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -33,7 +33,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
  * @Version 1.0
  */
 //注册JRouterProcessor这个注解处理器
-@AutoService(Process.class)
+@AutoService(Processor.class)
 public class JRouterProcessor extends BaseProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
@@ -90,7 +90,7 @@ public class JRouterProcessor extends BaseProcessor {
             //填充方法内容
             JRouter annotation = element.getAnnotation(JRouter.class);
             logger.info("parsing target " + TypeName.get(element.asType()));
-            loadIntoMethodBuilder.addStatement("map.put($S, new $L($S, $S, $T.class))", Util.parseGroup(annotation.path()), annotation.path(), TypeName.get(element.asType()));
+            loadIntoMethodBuilder.addStatement("map.put($S, new $L($S, $S, $T.class))", annotation.path(), TypeName.get(typeJPostCard),Util.parseGroup(annotation.path()), annotation.path(), TypeName.get(element.asType()));
         }
         //类
         String routeMapFileName = CLASS_ROUTE_MAP_NAME_PREFIX + moduleName;
