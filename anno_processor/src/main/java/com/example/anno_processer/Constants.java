@@ -14,6 +14,7 @@ public class Constants {
 
 
     public static final String JPostcard = "com.example.jrouterapi.JPostcard";
+    public static final String IRouteMapInterface = "com.example.jrouterapi.IRouteMap";
 
     //JRouter$$RouteMap$$
     public static final String CLASS_ROUTE_MAP_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "RouterMap" + CLASS_NAME_DIVIDER;
@@ -21,7 +22,11 @@ public class Constants {
     public static final String PACKAGE_NAME_PREFIX = "com.example.jrouter";
     //IRouterMap接口名称
     public static final String CLASS_NAME_ROUTER_MAP = "com.example.jrouterapi.IRouteMap";
+    //IRouterModule接口名称
+    public static final String CLASS_NAME_ROUTER_MODULE = "com.example.jrouterapi.IRouteModule";
 
+    //模块辅助类
+    public static final String CLASS_ROUTE_MODULE_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "RouterModule" + CLASS_NAME_DIVIDER;
 
     //logger
 
