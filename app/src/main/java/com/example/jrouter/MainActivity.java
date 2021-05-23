@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void jump(View v){
         JPostcard postcard = JRouter.path("/home_module/HomeActivity");
-        postcard.navigate(this);
+        Bundle bundle = new Bundle();
+        bundle.putString("from",getClass().getCanonicalName());
+        postcard.withParam(bundle).navigate(this);
     }
 }
