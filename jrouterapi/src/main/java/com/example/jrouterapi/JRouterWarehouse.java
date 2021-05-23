@@ -21,4 +21,24 @@ public class JRouterWarehouse {
     public static void injectModule(IRouteModule module) {
         module.loadRouteModule(routeModule);
     }
+
+    public static void injectRouteMap(String path, String moduleName) {
+        if (routeMap.get(path) != null) {
+            //已经注入
+            return;
+        }
+        IRouteMap iRouteMap = routeModule.get(moduleName);
+        if (iRouteMap == null) {
+            throw new IllegalArgumentException("can not find moduleName->"+moduleName);
+        }
+        iRouteMap.loadInto(routeMap);
+    }
+
+    public static JPostcard getJPostCard(String path) {
+        JPostcard postcard = routeMap.get(path);
+        if (postcard == null) {
+            throw new IllegalArgumentException("path->" + path + " is invalidate");
+        }
+        return postcard;
+    }
 }

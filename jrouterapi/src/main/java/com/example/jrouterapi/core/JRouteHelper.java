@@ -32,7 +32,7 @@ public class JRouteHelper {
             List<String> className = getClassName(context, "com.example.jrouter");
             for (String name :
                     className) {
-                if (name.startsWith("jrouter.home_module.JRouter$$RouterModule")) {
+                if (name.startsWith("com.example.jrouter.route_modules.JRouter$$RouterModule")) {
                     IRouteModule routeModule = (IRouteModule) Class.forName(name).getConstructor().newInstance();
                     JRouterWarehouse.injectModule(routeModule);
                 }

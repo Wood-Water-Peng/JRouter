@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.example.annotation.JRouter;
 
-@JRouter(path = "/home/HomeActivity")
+@JRouter(path = "/home_module/HomeActivity")
 public class HomeActivity extends AppCompatActivity {
 
     @Override

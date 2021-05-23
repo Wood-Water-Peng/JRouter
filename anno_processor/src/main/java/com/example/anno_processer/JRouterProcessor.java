@@ -27,6 +27,7 @@ import static com.example.anno_processer.Constants.CLASS_NAME_ROUTER_MODULE;
 import static com.example.anno_processer.Constants.CLASS_ROUTE_MAP_NAME_PREFIX;
 import static com.example.anno_processer.Constants.CLASS_ROUTE_MODULE_NAME_PREFIX;
 import static com.example.anno_processer.Constants.PACKAGE_NAME_PREFIX;
+import static com.example.anno_processer.Constants.PACKAGE_NAME_ROUTE_MODULE_PREFIX;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
@@ -87,7 +88,7 @@ public class JRouterProcessor extends BaseProcessor {
         //模块辅助类
         String routeMapFileName = CLASS_ROUTE_MODULE_NAME_PREFIX + moduleName;
         //包名
-        String packageName = PACKAGE_NAME_PREFIX + "." + moduleName;
+        String packageName = PACKAGE_NAME_ROUTE_MODULE_PREFIX;
         JavaFile.builder(packageName,
                 TypeSpec.classBuilder(routeMapFileName)
                         .addSuperinterface(ClassName.get(elementUtils.getTypeElement(CLASS_NAME_ROUTER_MODULE)))
@@ -147,7 +148,7 @@ public class JRouterProcessor extends BaseProcessor {
         //路由辅助类
         String routeMapFileName = CLASS_ROUTE_MAP_NAME_PREFIX + moduleName;
         //包名
-        String packageName = PACKAGE_NAME_PREFIX + "." + moduleName;
+        String packageName = PACKAGE_NAME_ROUTE_MODULE_PREFIX;
         JavaFile.builder(packageName,
                 TypeSpec.classBuilder(routeMapFileName)
                         .addSuperinterface(ClassName.get(elementUtils.getTypeElement(CLASS_NAME_ROUTER_MAP)))
