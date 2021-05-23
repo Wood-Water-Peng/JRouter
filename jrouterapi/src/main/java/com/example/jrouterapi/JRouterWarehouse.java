@@ -17,4 +17,8 @@ public class JRouterWarehouse {
     //每一个具体的路由信息
     ///home/homeActivity-> JPostcard存在放路由信息
     private static final Map<String, JPostcard> routeMap = new HashMap<>();
+
+    public static void injectModule(IRouteModule module) {
+        module.loadRouteModule(routeModule);
+    }
 }

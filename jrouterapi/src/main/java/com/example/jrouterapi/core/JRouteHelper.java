@@ -5,8 +5,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.example.jrouterapi.IRouteModule;
+import com.example.jrouterapi.JRouterWarehouse;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -26,7 +30,24 @@ public class JRouteHelper {
     public static void loadRoute(Context context) {
         try {
             List<String> className = getClassName(context, "com.example.jrouter");
+            for (String name :
+                    className) {
+                if (name.startsWith("jrouter.home_module.JRouter$$RouterModule")) {
+                    IRouteModule routeModule = (IRouteModule) Class.forName(name).getConstructor().newInstance();
+                    JRouterWarehouse.injectModule(routeModule);
+                }
+            }
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -34,8 +55,6 @@ public class JRouteHelper {
     static List<String> getClassName(Context context, String packageName) throws PackageManager.NameNotFoundException {
 
         ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-        File sourceApk = new File(applicationInfo.sourceDir);
-
         List<String> classNameList = new ArrayList<>();
         try {
             DexFile df = new DexFile(applicationInfo.sourceDir);//通过DexFile查找当前的APK中可执行文件
