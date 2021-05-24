@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.jrouterapi.IRouteModule;
 import com.example.jrouterapi.JRouterWarehouse;
+import com.example.jrouterapi.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import dalvik.system.DexFile;
+
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 /**
  * @Author jacky.peng
@@ -29,7 +32,7 @@ public class JRouteHelper {
     //找到apt生成的所有模块辅助类，理论上每一个模块一个辅助类
     public static void loadRoute(Context context) {
         try {
-            List<String> className = getClassName(context, "com.example.jrouter");
+            List<String> className = Utils.getClassName(context, PACKAGE_NAME);
             for (String name :
                     className) {
                 if (name.startsWith("com.example.jrouter.route_modules.JRouter$$RouterModule")) {
@@ -52,24 +55,5 @@ public class JRouteHelper {
         }
     }
 
-    static List<String> getClassName(Context context, String packageName) throws PackageManager.NameNotFoundException {
-
-        ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-        List<String> classNameList = new ArrayList<>();
-        try {
-            DexFile df = new DexFile(applicationInfo.sourceDir);//通过DexFile查找当前的APK中可执行文件
-            Enumeration<String> enumeration = df.entries();//获取df中的元素  这里包含了所有可执行的类名 该类名包含了包名+类名的方式
-            while (enumeration.hasMoreElements()) {
-                String className = enumeration.nextElement();
-                if (className.contains(packageName)) {
-                    classNameList.add(className);
-                    Log.d(TAG, String.format("加载{%s}", className));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return classNameList;
-    }
 
 }

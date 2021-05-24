@@ -11,7 +11,6 @@ public class LastInterceptor implements IRouteInterceptor {
 
     @Override
     public void intercept(@NonNull Chain chain, @NonNull Callback callback) {
-
         callback.onSuccess(chain.navigate());
     }
 }

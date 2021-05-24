@@ -38,7 +38,8 @@ public class JRouteInterceptorChain implements IRouteInterceptor.Chain {
             throw new IllegalStateException("index->" + index + " is larger than interceptor size");
         }
         IRouteInterceptor interceptor = interceptors.get(index);
-        interceptor.intercept(this,callback);
+        interceptor.intercept(this, callback);
+        index++;
     }
 
     @Override
