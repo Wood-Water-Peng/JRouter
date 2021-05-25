@@ -23,9 +23,13 @@ public class JRouter {
         return Holder.instance;
     }
 
-    public static void init(Application context) {
+    public static void init(Context context) {
         sContext = context;
         JRouteHelper.loadRoute(sContext);
+    }
+
+    public static Context context() {
+        return sContext;
     }
 
     /**

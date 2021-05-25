@@ -1,24 +1,16 @@
 package com.example.anno_processer;
 
-import com.example.annotation.Interceptor;
-import com.example.annotation.JModule;
-import com.example.annotation.JRouter;
+import com.example.annotation.JModuleAnno;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Processor;
@@ -26,13 +18,10 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
-import static com.example.anno_processer.Constants.CLASS_INTERCEPTOR_NAME_PREFIX;
-import static com.example.anno_processer.Constants.JRouterInterceptor;
-import static com.example.anno_processer.Constants.JRouterModuleInterceptor;
+import static com.example.anno_processer.Constants.CLASS_NAME_MODULE_PREFIX;
 import static com.example.anno_processer.Constants.MODULE_ASSIST_CLASS_FULL_PTAH;
-import static com.example.anno_processer.Constants.PACKAGE_NAME_INTERCEPTOR_MODULE_PREFIX;
+import static com.example.anno_processer.Constants.PACKAGE_NAME_MODULE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
@@ -48,7 +37,7 @@ public class JModuleProcessor extends BaseProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         if (set != null && !set.isEmpty()) {
-            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(JModule.class);
+            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(JModuleAnno.class);
             try {
                 if (elementsAnnotatedWith.size() > 1) {
                     throw new IllegalArgumentException("Module annotation can only have one!");
@@ -70,7 +59,7 @@ public class JModuleProcessor extends BaseProcessor {
     //      }
     //
     //       @override
-    //       void onCreated(Application context){
+    //       void onCreated(Context context){
     //           module.onCreated(context);
     //           //加载模块中的服务
     //           JInterceptorHelper.addInterceptorModule("home_module");
@@ -84,10 +73,16 @@ public class JModuleProcessor extends BaseProcessor {
     //      }
     //  }
 
+    private MethodSpec generateOnDestroyMethod(){
+        MethodSpec.Builder destroyMethodBuilder = MethodSpec.methodBuilder("onDestroy")
+                .addAnnotation(Override.class)
+                .addModifiers(PUBLIC);
+        destroyMethodBuilder.addStatement("$T.removeModuleInterceptor($S)", elementUtils.getTypeElement(Constants.INTERCEPTOR_HELPER), moduleName);
+        destroyMethodBuilder.addStatement("this.module.onDestroy()");
+        return destroyMethodBuilder.build();
+    }
 
     private String parseModule(Element element) throws IOException {
-        TypeMirror typeRouterInterceptor = elementUtils.getTypeElement(MODULE_ASSIST_CLASS_FULL_PTAH).asType();
-
         //成员变量
 
         //构造方法
@@ -98,7 +93,7 @@ public class JModuleProcessor extends BaseProcessor {
 
         //onCreated(Application context)方法
 
-        ParameterSpec parameterSpec = ParameterSpec.builder(ClassName.get(elementUtils.getTypeElement(Constants.APPLICATION)), "application")
+        ParameterSpec parameterSpec = ParameterSpec.builder(ClassName.get(elementUtils.getTypeElement(Constants.CONTEXT)), "context")
                 .build();
 
         MethodSpec.Builder onCreatedMethodBuilder = MethodSpec.methodBuilder("onCreated")
@@ -106,22 +101,19 @@ public class JModuleProcessor extends BaseProcessor {
                 .addParameter(parameterSpec)
                 .addModifiers(PUBLIC);
 
-        onCreatedMethodBuilder.addStatement("$T<$T, $T> map = new $T()",
-                Map.class,
-                String.class,
-                typeRouterInterceptor,
-                HashMap.class);
-
+        onCreatedMethodBuilder.addStatement("this.module.onCreated(context)");
+        onCreatedMethodBuilder.addStatement("$T.addModuleInterceptor($S)", elementUtils.getTypeElement(Constants.INTERCEPTOR_HELPER), moduleName);
 
         //拦截器辅助类
-        String routeMapFileName = CLASS_INTERCEPTOR_NAME_PREFIX + moduleName;
+        String routeMapFileName = CLASS_NAME_MODULE_PREFIX + moduleName;
         //包名
-        String packageName = PACKAGE_NAME_INTERCEPTOR_MODULE_PREFIX;
+        String packageName = PACKAGE_NAME_MODULE;
         JavaFile.builder(packageName,
                 TypeSpec.classBuilder(routeMapFileName)
-                        .addSuperinterface(ClassName.get(elementUtils.getTypeElement(JRouterModuleInterceptor)))
+                        .addSuperinterface(ClassName.get(elementUtils.getTypeElement(MODULE_ASSIST_CLASS_FULL_PTAH)))
                         .addModifiers(PUBLIC)
                         .addMethod(onCreatedMethodBuilder.build())
+                        .addMethod(generateOnDestroyMethod())
                         .addMethod(constructMethod)
                         .addField(FieldSpec.builder(ClassName.get(elementUtils.getTypeElement(MODULE_ASSIST_CLASS_FULL_PTAH)), "module", Modifier.PRIVATE).build())
                         .build()).build().writeTo(mFiler);
@@ -132,7 +124,7 @@ public class JModuleProcessor extends BaseProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new HashSet<>();
-        types.add(JRouter.class.getCanonicalName());
+        types.add(JModuleAnno.class.getCanonicalName());
         return types;
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.example.jrouterapi.interceptor.IRouteInterceptor;
+import com.example.jrouterapi.interceptor.JInterceptorStore;
 import com.example.jrouterapi.interceptor.JRouteInterceptorChain;
 import com.example.jrouterapi.interceptor.LastInterceptor;
 
@@ -48,21 +49,32 @@ public class JPostcard {
         this.targetClass = targetClass;
     }
 
-    public void navigate(Context context) {
+    public void navigate(Context context, IRouteInterceptor.Callback userCallback) {
         //生一个一个拦截器责任链条
         List<IRouteInterceptor> interceptors = new ArrayList<>();
+        //找到path对应的拦截器
+        IRouteInterceptor iRouteInterceptor = JInterceptorStore.getPathInterceptor().get(path);
+        if (iRouteInterceptor != null) {
+            interceptors.add(iRouteInterceptor);
+        }
         interceptors.add(new LastInterceptor());
-        new JRouteInterceptorChain(interceptors, new IRouteInterceptor.Callback() {
+        new JRouteInterceptorChain(interceptors, userCallback, new IRouteInterceptor.Callback() {
             @Override
             public void onSuccess(@NonNull JPostcard jPostcard) {
+                //执行真正的跳转逻辑
                 _navigate(context);
+                userCallback.onSuccess(jPostcard);
             }
 
             @Override
             public void onFail(@NonNull Throwable exception) {
-
+                userCallback.onFail(exception);
             }
         }, 0).proceed(this);
+    }
+
+    public void navigate(Context context) {
+        navigate(context, null);
     }
 
     public JPostcard withParam(Bundle bundle) {

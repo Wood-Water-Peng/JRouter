@@ -47,4 +47,5 @@ dependencies {
     annotationProcessor project(path: ':anno_processor')
 
     implementation project(path: ':jrouterapi')
+    implementation project(path: ':base_lib')
 }

@@ -7,12 +7,13 @@ import java.lang.annotation.Target;
 
 /**
  * @Author jacky.peng
- * @Date 2021/5/24 7:53 PM
+ * @Date 2021/5/24 8:58 AM
  * @Version 1.0
  */
-
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-//在模块被加载的时候,收集模块中的模块类，加入到核心库的模块仓库中
-public @interface JModule {
+//因为该注解只是用于编译器收集注解信息，不需要生成字节码加载到JVM中
+public @interface InterceptorAnno {
+    //拦截器对应的路径，如果没有设置则认为是全局拦截器
+    String path();
 }

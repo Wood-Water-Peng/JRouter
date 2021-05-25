@@ -1,25 +1,24 @@
-package com.example.home_module;
+package com.example.login_module;
 
 import android.content.Context;
 
 import com.example.annotation.JModuleAnno;
-import com.example.base_lib.JLogUtil;
 import com.example.jrouterapi.module.IModuleInterface;
 
 /**
  * @Author jacky.peng
- * @Date 2021/5/24 7:51 PM
+ * @Date 2021/5/25 11:17 AM
  * @Version 1.0
  */
 @JModuleAnno
-public class HomeModule implements IModuleInterface {
+public class UserModule implements IModuleInterface {
     @Override
     public void onCreated(Context context) {
-        JLogUtil.log(JLogUtil.MODULE_TAG,"HomeModule onCreated");
+
     }
 
     @Override
     public void onDestroy() {
-        JLogUtil.log(JLogUtil.MODULE_TAG,"HomeModule onDestroy");
+
     }
 }

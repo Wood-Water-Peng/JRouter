@@ -3,6 +3,7 @@ package com.example.jrouter;
 import android.app.Application;
 
 import com.example.jrouterapi.core.JRouter;
+import com.example.jrouterapi.module.ModuleHelper;
 
 /**
  * @Author jacky.peng
@@ -14,5 +15,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         JRouter.init(this);
+//        ModuleHelper.registerModule("home_module");
+        ModuleHelper.registerModule("login_module");
     }
 }

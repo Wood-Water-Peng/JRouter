@@ -1,7 +1,6 @@
 package com.example.anno_processer;
 
-import com.example.annotation.Interceptor;
-import com.example.annotation.JRouter;
+import com.example.annotation.InterceptorAnno;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -43,7 +42,7 @@ public class JInterceptorProcessor extends BaseProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         if (set != null && !set.isEmpty()) {
-            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(Interceptor.class);
+            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(InterceptorAnno.class);
             try {
                 String routeMapClassName = parseRoutes(elementsAnnotatedWith);
 
@@ -113,7 +112,7 @@ public class JInterceptorProcessor extends BaseProcessor {
 
         for (Element element : elementsAnnotatedWith) {
             //填充方法内容
-            Interceptor annotation = element.getAnnotation(Interceptor.class);
+            InterceptorAnno annotation = element.getAnnotation(InterceptorAnno.class);
             if (annotation.path() != null && !annotation.path().equals("")) {
                 loadIntoMethodBuilder.addStatement("map.put($S, new $T())", annotation.path(), TypeName.get(element.asType()));
             }
@@ -139,7 +138,7 @@ public class JInterceptorProcessor extends BaseProcessor {
 
         for (Element element : elementsAnnotatedWith) {
             //填充方法内容
-            Interceptor annotation = element.getAnnotation(Interceptor.class);
+            InterceptorAnno annotation = element.getAnnotation(InterceptorAnno.class);
             if (annotation.path() == null || annotation.path().equals("")) {
                 moduleGlobalInterceptorsBuilder.addStatement("list.add(new $T())", TypeName.get(element.asType()));
             }
@@ -164,7 +163,7 @@ public class JInterceptorProcessor extends BaseProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new HashSet<>();
-        types.add(JRouter.class.getCanonicalName());
+        types.add(InterceptorAnno.class.getCanonicalName());
         return types;
     }
 }

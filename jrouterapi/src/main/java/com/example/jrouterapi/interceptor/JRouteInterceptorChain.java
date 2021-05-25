@@ -14,7 +14,10 @@ import java.util.List;
 public class JRouteInterceptorChain implements IRouteInterceptor.Chain {
     @NonNull
     private final List<IRouteInterceptor> interceptors;
-    private final IRouteInterceptor.Callback callback;
+    //用户使用
+    private final IRouteInterceptor.Callback userCallback;
+    //责任链内部使用
+    private final IRouteInterceptor.Callback innerCallback;
     /**
      * 要执行的跳转对象
      */
@@ -24,9 +27,10 @@ public class JRouteInterceptorChain implements IRouteInterceptor.Chain {
      */
     private int index;
 
-    public JRouteInterceptorChain(@NonNull List<IRouteInterceptor> interceptors, IRouteInterceptor.Callback callback, int index) {
+    public JRouteInterceptorChain(@NonNull List<IRouteInterceptor> interceptors, IRouteInterceptor.Callback callback, IRouteInterceptor.Callback innerCallback, int index) {
         this.interceptors = interceptors;
-        this.callback = callback;
+        this.userCallback = callback;
+        this.innerCallback = innerCallback;
         this.index = index;
     }
 
@@ -38,13 +42,13 @@ public class JRouteInterceptorChain implements IRouteInterceptor.Chain {
             throw new IllegalStateException("index->" + index + " is larger than interceptor size");
         }
         IRouteInterceptor interceptor = interceptors.get(index);
-        interceptor.intercept(this, callback);
+        interceptor.intercept(this, userCallback);
         index++;
     }
 
     @Override
     public void interrupt(@NonNull Throwable exception) {
-
+        innerCallback.onFail(exception);
     }
 
     @Override

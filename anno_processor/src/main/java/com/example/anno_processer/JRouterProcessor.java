@@ -1,6 +1,6 @@
 package com.example.anno_processer;
 
-import com.example.annotation.JRouter;
+import com.example.annotation.JRouterAnno;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -11,7 +11,6 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +25,6 @@ import static com.example.anno_processer.Constants.CLASS_NAME_ROUTER_MAP;
 import static com.example.anno_processer.Constants.CLASS_NAME_ROUTER_MODULE;
 import static com.example.anno_processer.Constants.CLASS_ROUTE_MAP_NAME_PREFIX;
 import static com.example.anno_processer.Constants.CLASS_ROUTE_MODULE_NAME_PREFIX;
-import static com.example.anno_processer.Constants.PACKAGE_NAME_PREFIX;
 import static com.example.anno_processer.Constants.PACKAGE_NAME_ROUTE_MODULE_PREFIX;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -45,7 +43,7 @@ public class JRouterProcessor extends BaseProcessor {
         if (set != null && !set.isEmpty()) {
             logger.info("process begin...");
             System.out.println("process begin...");
-            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(JRouter.class);
+            Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(JRouterAnno.class);
             try {
                 String routeMapClassName = parseRoutes(elementsAnnotatedWith);
 
@@ -141,7 +139,7 @@ public class JRouterProcessor extends BaseProcessor {
                 .addParameter(mapParamSpec);
         for (Element element : elementsAnnotatedWith) {
             //填充方法内容
-            JRouter annotation = element.getAnnotation(JRouter.class);
+            JRouterAnno annotation = element.getAnnotation(JRouterAnno.class);
             logger.info("parsing target " + TypeName.get(element.asType()));
             loadIntoMethodBuilder.addStatement("map.put($S, new $L($S, $S, $T.class))", annotation.path(), TypeName.get(typeJPostCard), Util.parseGroup(annotation.path()), annotation.path(), TypeName.get(element.asType()));
         }
@@ -162,7 +160,7 @@ public class JRouterProcessor extends BaseProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new HashSet<>();
-        types.add(JRouter.class.getCanonicalName());
+        types.add(JRouterAnno.class.getCanonicalName());
         return types;
     }
 }

@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.annotation.JRouter;
+import com.example.annotation.JRouterAnno;
 
 import java.util.Set;
 
-@JRouter(path = "/home_module/HomeActivity")
+@JRouterAnno(path = "/home_module/HomeActivity")
 public class HomeActivity extends AppCompatActivity {
 
     TextView textView;

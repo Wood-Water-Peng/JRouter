@@ -9,7 +9,7 @@ public class Constants {
     public static final String PROJECT_NAME = "JRouter";
     public static final String CLASS_NAME_DIVIDER = "$$";
     public static final String PACKAGE_NAME = "com.example.jrouter";
-    public static final String APPLICATION = "android.app.Application";
+    public static final String CONTEXT = "android.content.Context";
 
     //对应着各module在build.gradle中生成的注解处理器相关字段
     public static final String KEY_MODULE_NAME = "JROUTER_MODULE_NAME";
@@ -47,6 +47,8 @@ public class Constants {
     /**
      * 拦截器
      */
+    //帮助类
+    public static final String INTERCEPTOR_HELPER = "com.example.jrouterapi.interceptor.JInterceptorHelper";
     //拦截器辅助类包名
     public static final String PACKAGE_NAME_INTERCEPTOR_MODULE_PREFIX = PACKAGE_NAME + ".interceptor_modules";
 

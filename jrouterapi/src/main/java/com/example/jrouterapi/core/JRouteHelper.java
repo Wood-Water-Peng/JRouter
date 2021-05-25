@@ -32,7 +32,7 @@ public class JRouteHelper {
     //找到apt生成的所有模块辅助类，理论上每一个模块一个辅助类
     public static void loadRoute(Context context) {
         try {
-            List<String> className = Utils.getClassName(context, PACKAGE_NAME);
+            List<String> className = Utils.getClassName(context, "com.example.jrouter");
             for (String name :
                     className) {
                 if (name.startsWith("com.example.jrouter.route_modules.JRouter$$RouterModule")) {

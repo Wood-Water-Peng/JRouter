@@ -9,7 +9,7 @@ import android.content.Context;
  * @Version 1.0
  */
 public interface IModuleInterface {
-    void onCreated(Application context);
+    void onCreated(Context context);
 
     void onDestroy();
 }

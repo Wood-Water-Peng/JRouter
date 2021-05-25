@@ -26,4 +26,12 @@ public class JInterceptorStore {
     public static void putGlobalInterceptors(List<IRouteInterceptor> interceptors) {
         globalInterceptors.addAll(interceptors);
     }
+
+    public static Map<String, IRouteInterceptor> getPathInterceptor() {
+        return pathInterceptor;
+    }
+
+    public static List<IRouteInterceptor> getGlobalInterceptors() {
+        return globalInterceptors;
+    }
 }

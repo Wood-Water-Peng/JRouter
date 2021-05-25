@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface JRouter {
+public @interface JRouterAnno {
     String path();
 }

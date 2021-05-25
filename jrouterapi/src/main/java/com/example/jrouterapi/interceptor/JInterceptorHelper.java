@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class JInterceptorHelper {
     //加载这个模块中的拦截器
-    public static void addModuleInterceptors(String moduleName) {
+    public static void addModuleInterceptor(String moduleName) {
         try {
             Class<?> aClass = Class.forName("com.example.jrouter.interceptor_modules.JRouter$$Interceptor$$" + moduleName);
             IModuleInterceptor moduleInterceptor = (IModuleInterceptor) aClass.getConstructor().newInstance();
@@ -23,8 +23,8 @@ public class JInterceptorHelper {
             ) {
                 JInterceptorStore.putInterceptor(entry.getKey(), entry.getValue());
             }
-            //全局拦截器
-            JInterceptorStore.putGlobalInterceptors(moduleInterceptor.moduleGlobalInterceptors());
+            //全局拦截器   暂时不添加模块中定义的全局拦截器
+//            JInterceptorStore.putGlobalInterceptors(moduleInterceptor.moduleGlobalInterceptors());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -36,5 +36,10 @@ public class JInterceptorHelper {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    //卸载模块中的拦截器  暂时无法实现
+    public static void removeModuleInterceptor(String moduleName) {
+
     }
 }
