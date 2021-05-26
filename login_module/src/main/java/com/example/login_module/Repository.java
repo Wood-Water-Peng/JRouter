@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
  */
 public class Repository {
 
+    public static final String SP_KEY_UID="sp_key_uid";
+    public static final String SP_KEY_TOKEN="sp_key_token";
     Context context;
     SharedPreferences sharedPref;
 
@@ -31,7 +33,18 @@ public class Repository {
         sharedPref.edit().putString(key, value).commit();
     }
 
-    public String getString(String key) {
-        return sharedPref.getString(key, "");
+    public String getUid() {
+        return sharedPref.getString(SP_KEY_UID, "");
+    }
+
+    public String getToken() {
+        return sharedPref.getString(SP_KEY_TOKEN, "");
+    }
+
+    public String putUid(String value) {
+        return sharedPref.getString(SP_KEY_UID, "");
+    }
+    public String putToken(String token) {
+        return sharedPref.getString(SP_KEY_TOKEN, "");
     }
 }

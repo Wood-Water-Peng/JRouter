@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/home_module" />
             <option value="$PROJECT_DIR$/jrouterapi" />
             <option value="$PROJECT_DIR$/login_module" />
+            <option value="$PROJECT_DIR$/login_module_export" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
