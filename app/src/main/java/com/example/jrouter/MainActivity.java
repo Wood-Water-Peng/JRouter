@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFail(@NonNull Throwable exception) {
                 Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                //跳转到登录页面
+                JRouter.path("/login_module/LoginActivity").navigate(MainActivity.this);
             }
         });
     }

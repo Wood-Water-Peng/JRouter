@@ -15,16 +15,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="100dp"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:onClick="jump"
-            android:text="Hello World!" />
+            android:text="去登陆" />
 
-        <TextView
-            android:layout_width="100dp"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:gravity="center"

@@ -63,12 +63,16 @@ public class JPostcard {
             public void onSuccess(@NonNull JPostcard jPostcard) {
                 //执行真正的跳转逻辑
                 _navigate(context);
-                userCallback.onSuccess(jPostcard);
+                if (userCallback != null) {
+                    userCallback.onSuccess(jPostcard);
+                }
             }
 
             @Override
             public void onFail(@NonNull Throwable exception) {
-                userCallback.onFail(exception);
+                if (userCallback != null) {
+                    userCallback.onFail(exception);
+                }
             }
         }, 0).proceed(this);
     }
