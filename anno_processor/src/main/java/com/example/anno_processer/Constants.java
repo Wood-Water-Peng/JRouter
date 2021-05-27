@@ -19,6 +19,7 @@ public class Constants {
     public static final String JRouterModuleInterceptor = "com.example.jrouterapi.interceptor.IModuleInterceptor";
     public static final String JRouterInterceptor = "com.example.jrouterapi.interceptor.IRouteInterceptor";
     public static final String IRouteMapInterface = "com.example.jrouterapi.IRouteMap";
+    public static final String IModuleServiceInterface = "com.example.jrouterapi.service.IModuleService";
 
     /**
      * 模块相关
@@ -54,6 +55,19 @@ public class Constants {
 
     //拦截器辅助类类名
     public static final String CLASS_INTERCEPTOR_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "Interceptor" + CLASS_NAME_DIVIDER;
+
+
+    /**
+     * 服务
+     */
+
+    public static final String MODULE_SERVICE_HELPER = "com.example.jrouterapi.service.ServiceHelper";
+
+    //服务辅助类包名
+    public static final String PACKAGE_NAME_SERVICE_MODULE_PREFIX = PACKAGE_NAME + ".service_modules";
+
+    //服务辅助类类名
+    public static final String CLASS_SERVICE_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "Service" + CLASS_NAME_DIVIDER;
 
     //logger
 

@@ -19,7 +19,7 @@ public class User {
     }
 
     public User(String uid, String token) {
-        this.name = name;
+        this.name = uid;
         this.token = token;
         isLogin = true;
     }

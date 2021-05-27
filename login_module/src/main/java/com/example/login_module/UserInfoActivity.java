@@ -21,8 +21,8 @@ public class UserInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_info);
         tvUserName = findViewById(R.id.userName);
         tvToken = findViewById(R.id.token);
-        String uid = Repository.getInstance().getString("uid");
-        String token = Repository.getInstance().getString("token");
+        String uid = Repository.getInstance().getUid();
+        String token = Repository.getInstance().getToken();
         if (uid.equals("admin") && token.equals("admin")) {
             tvUserName.setText(uid);
             tvToken.setText(token);

@@ -103,6 +103,7 @@ public class JModuleProcessor extends BaseProcessor {
 
         onCreatedMethodBuilder.addStatement("this.module.onCreated(context)");
         onCreatedMethodBuilder.addStatement("$T.addModuleInterceptor($S)", elementUtils.getTypeElement(Constants.INTERCEPTOR_HELPER), moduleName);
+        onCreatedMethodBuilder.addStatement("$T.registerServices($S)", elementUtils.getTypeElement(Constants.MODULE_SERVICE_HELPER), moduleName);
 
         //拦截器辅助类
         String routeMapFileName = CLASS_NAME_MODULE_PREFIX + moduleName;

@@ -11,4 +11,12 @@ import java.util.Map;
 public class ServiceCenter {
     //所有模块中的服务，服务名称全项目唯一
     static Map<String, Object> services = new HashMap<>();
+
+    public static void addService(String name, Object service) {
+        services.put(name, service);
+    }
+
+    public static Object getService(String serviceName){
+        return services.get(serviceName);
+    }
 }

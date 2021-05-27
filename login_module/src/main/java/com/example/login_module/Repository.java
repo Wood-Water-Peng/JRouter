@@ -30,7 +30,7 @@ public class Repository {
     }
 
     public void putString(String key, String value) {
-        sharedPref.edit().putString(key, value).commit();
+        sharedPref.edit().putString(key, value).apply();
     }
 
     public String getUid() {
@@ -41,10 +41,10 @@ public class Repository {
         return sharedPref.getString(SP_KEY_TOKEN, "");
     }
 
-    public String putUid(String value) {
-        return sharedPref.getString(SP_KEY_UID, "");
+    public void putUid(String value) {
+         sharedPref.edit().putString(SP_KEY_UID, value).apply();
     }
-    public String putToken(String token) {
-        return sharedPref.getString(SP_KEY_TOKEN, "");
+    public void putToken(String token) {
+        sharedPref.edit().putString(SP_KEY_TOKEN, token).apply();
     }
 }

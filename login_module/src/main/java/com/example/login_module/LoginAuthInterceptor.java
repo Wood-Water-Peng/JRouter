@@ -19,10 +19,7 @@ public class LoginAuthInterceptor implements IRouteInterceptor {
     @Override
     public void intercept(@NonNull Chain chain, @NonNull Callback callback) {
         JPostcard jPostcard = chain.navigate();
-        Bundle params = jPostcard.getParams();
-        String uid = params.getString("uid");
-        String token = params.getString("token");
-        if(checkToken(uid,token)){
+        if(checkToken(Repository.getInstance().getUid(),Repository.getInstance().getToken())){
             chain.proceed(jPostcard);
         }else {
             Exception exception = new Exception("invalidate uid");
