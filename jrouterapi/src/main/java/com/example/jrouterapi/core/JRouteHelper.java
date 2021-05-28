@@ -56,4 +56,16 @@ public class JRouteHelper {
     }
 
 
+    /**
+     * 使用插桩在JRouteHelper的字节码中加入加载路由模块的代码
+     */
+    public static void injectRouteModuleByPlugin() {
+       //register(new com.example.jrouter.route_modules.JRouter$$RouterModule$$home_module());
+       //register(new com.example.jrouter.route_modules.JRouter$$RouterModule$$login_module());
+    }
+
+    //for asm
+    private static void register(IRouteModule module) {
+        JRouterWarehouse.injectModule(module);
+    }
 }

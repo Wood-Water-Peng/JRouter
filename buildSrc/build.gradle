@@ -1,0 +1,50 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+
+buildscript{
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
+    }
+
+}
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // 包含了AMS字节码注入工具
+    implementation "com.android.tools.build:gradle:3.4.2"
+    implementation gradleApi()
+
+}
+
+
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}

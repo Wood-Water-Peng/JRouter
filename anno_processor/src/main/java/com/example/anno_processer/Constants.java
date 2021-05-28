@@ -35,7 +35,7 @@ public class Constants {
     //JRouter$$RouteMap$$
     public static final String CLASS_ROUTE_MAP_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "RouterMap" + CLASS_NAME_DIVIDER;
     //路由模块辅助类的包名
-    public static final String PACKAGE_NAME_ROUTE_MODULE_PREFIX = PACKAGE_NAME + ".route_modules";
+    public static final String PACKAGE_NAME_ROUTE_MODULE_PREFIX = PACKAGE_NAME;
     //IRouterMap接口名称
     public static final String CLASS_NAME_ROUTER_MAP = "com.example.jrouterapi.IRouteMap";
     //IRouterModule接口名称
