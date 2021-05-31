@@ -10,7 +10,7 @@ class RouterPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
-        def ext  = project.extensions.findByType(BaseExtension.class)
+        def ext  = project.extensions.findByType(BaseExtension)
 //        LibraryExtension libraryExtension = project.extensions.findByName(LibraryExtension.class)
         System.out.println("RouterPlugin extensions->"+{ext.toString()})
         ext.registerTransform(new RouterTransform())

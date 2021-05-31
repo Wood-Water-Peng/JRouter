@@ -43,6 +43,9 @@ public class JPostcard {
         return params;
     }
 
+    public JPostcard() {
+    }
+
     public JPostcard(String group, String path, Class<?> targetClass) {
         this.group = group;
         this.path = path;

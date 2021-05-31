@@ -8,13 +8,13 @@ import org.objectweb.asm.Opcodes
  * @Author jacky.peng* @Date 2021/4/16 10:06 AM
  * @Version 1.0
  */
-class TrackClassVisitor extends ClassVisitor {
+class InjectClassVisitor extends ClassVisitor {
     private String mClassName;
     private String mSuperName;
     private String[] interfaces;
 
 
-    TrackClassVisitor(ClassVisitor classVisitor) {
+    InjectClassVisitor(ClassVisitor classVisitor) {
         super(Opcodes.ASM6, classVisitor);
     }
 
@@ -26,33 +26,19 @@ class TrackClassVisitor extends ClassVisitor {
         this.mSuperName = superName;
         //获取类所实现的所有接口
         this.interfaces = interfaces
-
-        if (isImplOfRouteModule(interfaces)) {
-            //这个class保存起来
-            Repository.addClassPath(mClassName)
-            Repository.printClassPath()
-            System.out.println("TrackClassVisitor:"+Repository.getClassPathList().toArray().toArrayString())
-        }
-
     }
 
     String nameDesc;
 
 
-    private boolean isImplOfRouteModule(String[] interfaces) {
-        if (interfaces == null || interfaces.size() == 0) return false
-        for (int i = 0; i < interfaces.size(); i++) {
-            if (interfaces[i] == Repository.ROUTER_MODULE_INTERFACE) {
-                return true
-            }
-        }
-        return false;
-    }
-
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor mv = cv.visitMethod(access, name, descriptor, signature, exceptions);
         nameDesc = name + descriptor
+        if (name == "injectRouteModuleByPlugin") {
+            System.out.println("InjectClassVisitor injectRouteModuleByPlugin")
+            mv = new InjectMethodVisitor(mv, access, name, descriptor, mClassName)
+        }
         return mv
     }
 

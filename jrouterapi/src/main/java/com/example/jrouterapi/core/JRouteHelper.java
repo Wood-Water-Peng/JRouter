@@ -1,7 +1,6 @@
 package com.example.jrouterapi.core;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -9,17 +8,8 @@ import com.example.jrouterapi.IRouteModule;
 import com.example.jrouterapi.JRouterWarehouse;
 import com.example.jrouterapi.Utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-
-import dalvik.system.DexFile;
-
-import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 /**
  * @Author jacky.peng
@@ -31,11 +21,16 @@ public class JRouteHelper {
 
     //找到apt生成的所有模块辅助类，理论上每一个模块一个辅助类
     public static void loadRoute(Context context) {
+        injectRouteModuleByPlugin();
+
+    }
+
+    private void injectRouteModule(Context context) {
         try {
             List<String> className = Utils.getClassName(context, "com.example.jrouter");
             for (String name :
                     className) {
-                if (name.startsWith("com.example.jrouter.route_modules.JRouter$$RouterModule")) {
+                if (name.startsWith("com.example.jrouter.JRouter$$RouterModule")) {
                     IRouteModule routeModule = (IRouteModule) Class.forName(name).getConstructor().newInstance();
                     JRouterWarehouse.injectModule(routeModule);
                 }
@@ -55,17 +50,17 @@ public class JRouteHelper {
         }
     }
 
-
     /**
      * 使用插桩在JRouteHelper的字节码中加入加载路由模块的代码
      */
     public static void injectRouteModuleByPlugin() {
-       //register(new com.example.jrouter.route_modules.JRouter$$RouterModule$$home_module());
-       //register(new com.example.jrouter.route_modules.JRouter$$RouterModule$$login_module());
+//       register(new Test());
+//        register(new JRouter$$RouterModule$$home_module());
     }
 
     //for asm
     private static void register(IRouteModule module) {
+        Log.i(TAG,"register->"+module.getClass().getCanonicalName());
         JRouterWarehouse.injectModule(module);
     }
 }

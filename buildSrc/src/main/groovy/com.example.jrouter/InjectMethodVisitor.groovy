@@ -9,25 +9,34 @@ import org.objectweb.asm.commons.AdviceAdapter
  * @Version 1.0
  */
 class InjectMethodVisitor extends AdviceAdapter {
-    private String className;
     private String methodName;
     String nameDesc
+    String className
 
     InjectMethodVisitor(MethodVisitor mv, int access, String name, String desc, String className) {
         super(Opcodes.ASM6, mv, access, name, desc);
-        this.className = className;
-        this.methodName = name;
+        this.methodName = name
+        this.className = className
         this.nameDesc = name + desc
     }
 
     //register(new com.example.jrouter.route_modules.JRouter$$RouterModule$$home_module());
+    // mv.visitTypeInsn(NEW, "com/example/jrouterapi/Test");
+    //            mv.visitInsn(DUP);
+    //            mv.visitMethodInsn(INVOKESPECIAL, "com/example/jrouterapi/Test", "<init>", "()V", false);
+    //            mv.visitMethodInsn(INVOKESTATIC, "com/example/jrouterapi/core/JRouteHelper", "register", "(Lcom/example/jrouterapi/IRouteModule;)V", false);
     @Override
     protected void onMethodEnter() {
         super.onMethodEnter();
-        mv.visitTypeInsn(NEW, className);
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, className, "<init>", "()V", false);
-        mv.visitMethodInsn(INVOKESTATIC, "com/example/jrouterapi/core/JRouteHelper", "register", "(Lcom.example.jrouterapi.IRouteModule;)V", false);
+        List<String> paths = Repository.getClassPathList()
+        for (int i = 0; i < paths.size(); i++) {
+            String clazz = paths.get(i);
+            mv.visitTypeInsn(NEW, clazz);
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, clazz, "<init>", "()V", false);
+            mv.visitMethodInsn(INVOKESTATIC, "com/example/jrouterapi/core/JRouteHelper", "register", "(Lcom/example/jrouterapi/IRouteModule;)V", false);
+        }
+        System.out.println("onMethodEnter className:"+this.className+"--method:"+this.methodName)
     }
 
     @Override
