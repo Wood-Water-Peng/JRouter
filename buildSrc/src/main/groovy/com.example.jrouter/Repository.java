@@ -17,9 +17,7 @@ public class Repository {
     public static final String ROUTER_MODULE_INTERFACE = "com/example/jrouterapi/IRouteModule";
 
     //要被注入字节码的class文件的路径
-    public static File injectJarInputPath;
-    public static File injectJarOutPath;
-
+    public static InjectBean injectBean;
     //apt生成的辅助类的class文件路径
     private static List<String> classPathList = new ArrayList<>();
 
@@ -42,5 +40,19 @@ public class Repository {
         }
         sb.append("]");
         System.out.println(sb.toString());
+    }
+
+    public static class InjectBean {
+        //注入的class文件路径
+        public String injectClassName=ROUTER_HELPER_CLASS;
+        //要注入的class文件所在的目录
+        public String srcFilePath;
+        //要注入的class文件的输出目录
+        public String desFilePath;
+
+        public InjectBean(String srcFilePath, String desFilePath) {
+            this.srcFilePath = srcFilePath;
+            this.desFilePath = desFilePath;
+        }
     }
 }

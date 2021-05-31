@@ -80,16 +80,79 @@ class RouterTransform extends Transform {
         //注入字节码
         //1.保存将要被注入字节码的class文件的路径
         //2.保存
-        System.out.println("input jar path->" + Repository.injectJarInputPath.getAbsolutePath())
-        System.out.println("out jar path->" + Repository.injectJarOutPath.getAbsolutePath())
+//        System.out.println("input jar path->" + Repository.injectJarInputPath.getAbsolutePath())
+//        System.out.println("out jar path->" + Repository.injectJarOutPath.getAbsolutePath())
 
 //        modifyClassInJar(Repository.injectJarOutPath, Repository.ROUTER_HELPER_CLASS)
-        isTrack = false
-        transformInputs.each { TransformInput input ->
-            // 遍历 jar
-            input.jarInputs.each { JarInput jarInput ->
-                forEachJar(jarInput, outputProvider, transformInvocation.context)
+
+        if (Repository.injectBean != null) {
+            String srcDir = Repository.injectBean.srcFilePath
+            if (srcDir.endsWith(".jar")) {
+                //这是个jar
+                System.out.println("modifyClass 注入代码 className:" + Repository.injectBean.injectClassName + "---des:" + Repository.injectBean.desFilePath)
+                injectJar(Repository.injectBean.desFilePath, Repository.injectBean.injectClassName)
+            } else {
+
             }
+        }
+    }
+
+
+    private void injectJar(String desPath, String className) {
+        File desFile = new File(desPath)
+        def outputJar = new File(desFile.getParent(), "tmp_" + desFile.name)
+        JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(outputJar))
+        JarFile jarFile = new JarFile(desFile);
+        Enumeration enumeration = jarFile.entries()
+
+        while (enumeration.hasMoreElements()) {
+            JarEntry jarEntry = (JarEntry) enumeration.nextElement()
+            InputStream inputStream
+            try {
+                inputStream = jarFile.getInputStream(jarEntry)
+            } catch (Exception e) {
+                IOUtils.closeQuietly(inputStream)
+                e.printStackTrace()
+            }
+            String entryName = jarEntry.getName()
+            JarEntry entry = new JarEntry(entryName)
+            byte[] modifiedClassBytes = null
+            byte[] sourceClassBytes
+            try {
+                jarOutputStream.putNextEntry(entry)
+                sourceClassBytes = TrackUtil.toByteArrayAndAutoCloseStream(inputStream)
+            } catch (Exception e) {
+                System.out.println("Exception encountered while processing jar: " + jarFile.getAbsolutePath())
+                IOUtils.closeQuietly(file)
+                IOUtils.closeQuietly(jarOutputStream)
+                e.printStackTrace()
+            }
+            if (!jarEntry.isDirectory() && entryName.endsWith(".class")) {
+                System.out.println("injectJar entryName:" + entryName)
+                modifiedClassBytes = injectClass(sourceClassBytes)
+            }
+            if (modifiedClassBytes == null) {
+                jarOutputStream.write(sourceClassBytes)
+            } else {
+                jarOutputStream.write(modifiedClassBytes)
+            }
+            jarOutputStream.closeEntry()
+        }
+        jarOutputStream.close()
+        jarFile.close()
+        outputJar.renameTo(desFile.getAbsolutePath())
+    }
+
+    private byte[] injectClass(byte[] srcClass){
+        try {
+            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS)
+            ClassVisitor injectVisitor = new InjectClassVisitor(classWriter)
+            ClassReader cr = new ClassReader(srcClass)
+            cr.accept(injectVisitor, ClassReader.EXPAND_FRAMES + ClassReader.SKIP_FRAMES)
+            return classWriter.toByteArray()
+        } catch (Exception ex) {
+            ex.printStackTrace()
+            return srcClass
         }
     }
 
@@ -108,7 +171,7 @@ class RouterTransform extends Transform {
                 // 对class文件的写入
                 ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
                 // 访问class文件相应的内容，解析到某一个结构就会通知到ClassVisitor的相应方法
-                ClassVisitor classVisitor = new TrackClassVisitor(classWriter)
+                ClassVisitor classVisitor = new TrackClassVisitor(classWriter, dir.absolutePath, dest.absolutePath)
                 // 依次调用ClassVisitor接口的各个方法
                 classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
                 // toByteArray方法会将最终修改的字节码以byte数组形式返回
@@ -137,13 +200,13 @@ class RouterTransform extends Transform {
 
     void transformJar(File dest, JarInput jarInput, Context context) {
         def modifiedJar = null
-        println("开始遍历 jar：" + jarInput.file.absolutePath)
+//        println("开始遍历 jar：" + jarInput.file.absolutePath)
         modifiedJar = modifyJarFile(jarInput.file, context.getTemporaryDir(), dest)
         if (modifiedJar == null) {
             modifiedJar = jarInput.file
         }
-        println("结束遍历 jar  dest：" + dest.toPath()
-                .toString())
+//        println("结束遍历 jar  dest：" + dest.toPath()
+//                .toString())
         FileUtils.copyFile(modifiedJar, dest)
     }
 
@@ -243,11 +306,11 @@ class RouterTransform extends Transform {
             } else {
                 String className
                 JarEntry entry = new JarEntry(entryName)
-                if (isTrack && entry.toString().endsWith(".class") && entry.toString() == Repository.ROUTER_HELPER_CLASS) {
-                    Repository.injectJarInputPath = jarFile
-                    Repository.injectJarOutPath = des
-
-                }
+//                if (isTrack && entry.toString().endsWith(".class") && entry.toString() == Repository.ROUTER_HELPER_CLASS) {
+//                    Repository.injectJarInputPath = jarFile
+//                    Repository.injectJarOutPath = des
+//
+//                }
                 byte[] modifiedClassBytes = null
                 byte[] sourceClassBytes
                 try {
@@ -262,13 +325,7 @@ class RouterTransform extends Transform {
                 }
                 if (!jarEntry.isDirectory() && entryName.endsWith(".class")) {
                     className = entryName.replace("/", ".").replace(".class", "")
-                    if (isTrack) {
-                        modifiedClassBytes = modifyClass(sourceClassBytes, className)
-
-                    } else if (entryName == Repository.ROUTER_HELPER_CLASS) {
-                        modifiedClassBytes = modifyClass(sourceClassBytes, className)
-                    }
-
+                    modifiedClassBytes = modifyClass(sourceClassBytes, className, jarFile.absolutePath, des.absolutePath)
                 }
                 if (modifiedClassBytes == null) {
                     jarOutputStream.write(sourceClassBytes)
@@ -282,20 +339,13 @@ class RouterTransform extends Transform {
         file.close()
         return outputJar
     }
-    boolean isTrack = true
     /**
      * 真正修改类中方法字节码
      */
-    private byte[] modifyClass(byte[] srcClass, String className) {
+    private byte[] modifyClass(byte[] srcClass, String className, String srcDir, String desDir) {
         try {
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS)
-            ClassVisitor firstVisitor;
-            if (isTrack) {
-                firstVisitor = new TrackClassVisitor(classWriter)
-            } else {
-                System.out.println("modifyClass 注入代码 className:" + className)
-                firstVisitor = new InjectClassVisitor(classWriter)
-            }
+            ClassVisitor firstVisitor = new TrackClassVisitor(classWriter, srcDir, desDir)
             ClassReader cr = new ClassReader(srcClass)
             cr.accept(firstVisitor, ClassReader.EXPAND_FRAMES + ClassReader.SKIP_FRAMES)
             return classWriter.toByteArray()

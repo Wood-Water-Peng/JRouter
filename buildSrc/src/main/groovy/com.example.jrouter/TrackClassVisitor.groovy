@@ -12,10 +12,15 @@ class TrackClassVisitor extends ClassVisitor {
     private String mClassName;
     private String mSuperName;
     private String[] interfaces;
+    //这个class所在的目录
+    String srcDirPath
+    //这个class要输出的目录
+    String desDirPath
 
-
-    TrackClassVisitor(ClassVisitor classVisitor) {
+    TrackClassVisitor(ClassVisitor classVisitor,String src,String des) {
         super(Opcodes.ASM6, classVisitor);
+        this.srcDirPath=src;
+        this.desDirPath=des
     }
 
     //类被访问
@@ -31,7 +36,11 @@ class TrackClassVisitor extends ClassVisitor {
             //这个class保存起来
             Repository.addClassPath(mClassName)
             Repository.printClassPath()
-            System.out.println("TrackClassVisitor:"+Repository.getClassPathList().toArray().toArrayString())
+            System.out.println("TrackClassVisitor:" + Repository.getClassPathList().toArray().toArrayString())
+        }
+        if (mClassName+".class" == Repository.ROUTER_HELPER_CLASS) {
+        System.out.println("TrackClassVisitor mClassName:" + mClassName+"--src:"+srcDirPath+"--des:"+desDirPath)
+            Repository.injectBean = new Repository.InjectBean(this.srcDirPath, this.desDirPath)
         }
 
     }
