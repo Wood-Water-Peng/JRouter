@@ -19,9 +19,9 @@
 
 1. 当前模块    
 2. 子模块   项目中所有参与构建的子模块
-3. 第三方依赖库
+3. 第三方依赖库(暂未解析过)
 
-对当前模块中class文件的解析以文件的方式进行处理，生成的
+对当前模块中class文件的解析以文件的方式进行处理
 
 输入路径-》
 >srcDir:JRouter/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes
@@ -41,7 +41,7 @@
 
 #### RouterTransform具体的遍历流程
 
-1. 遍历当前模块的class和所有子模块的jar，找到实现了com.example.jrouterapi.IRouteModule接口的class的路径；同时存储com.example.jrouterapi.core.JRouteHelper的class所在的路径信息，可能是一个文件夹(当前模块)，也可能是在jar中。
+1. 遍历当前模块的class和所有子模块的jar，找到实现了com.example.jrouterapi.IRouteModule接口的class的路径；同时存储com.example.jrouterapi.core.JRouteHelper的class所在的路径信息，可能是一个文件夹(当前模块)，也可能是在jar中，如果是jar则存储jar的输出路径
 
 2. 根据第一步保存的路径信息的格式，决定第二次遍历当前模块还是所有的jar，如果是jar则要修改jar中com.example.jrouterapi.core.JRouteHelper的class文件，并将整个jar写入到输出目录。
 
