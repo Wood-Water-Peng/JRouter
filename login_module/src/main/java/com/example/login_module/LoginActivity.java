@@ -13,8 +13,6 @@ import com.example.jrouterapi.core.JRouter;
 @JRouterAnno(path = "/login_module/LoginActivity")
 public class LoginActivity extends AppCompatActivity {
 
-    String userName;
-    String psw;
     EditText etUserName;
     EditText etUserPsw;
 

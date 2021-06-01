@@ -10,8 +10,8 @@ import android.content.SharedPreferences;
  */
 public class Repository {
 
-    public static final String SP_KEY_UID="sp_key_uid";
-    public static final String SP_KEY_TOKEN="sp_key_token";
+    public static final String SP_KEY_UID = "sp_key_uid";
+    public static final String SP_KEY_TOKEN = "sp_key_token";
     Context context;
     SharedPreferences sharedPref;
 
@@ -19,6 +19,9 @@ public class Repository {
 
     public static Repository getInstance() {
         if (sRepository == null) {
+            if (UserModule.sContext == null) {
+                throw new IllegalStateException("you should init corresponding module first");
+            }
             sRepository = new Repository(UserModule.sContext);
         }
         return sRepository;
@@ -26,7 +29,7 @@ public class Repository {
 
     private Repository(Context context) {
         this.context = context;
-        sharedPref = context.getSharedPreferences("jrouter_sp", Context.MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
     }
 
     public void putString(String key, String value) {
@@ -42,8 +45,9 @@ public class Repository {
     }
 
     public void putUid(String value) {
-         sharedPref.edit().putString(SP_KEY_UID, value).apply();
+        sharedPref.edit().putString(SP_KEY_UID, value).apply();
     }
+
     public void putToken(String token) {
         sharedPref.edit().putString(SP_KEY_TOKEN, token).apply();
     }

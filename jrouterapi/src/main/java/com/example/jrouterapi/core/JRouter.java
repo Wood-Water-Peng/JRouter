@@ -24,8 +24,16 @@ public class JRouter {
     }
 
     public static void init(Context context) {
+        init(context, false);
+    }
+
+    public static void init(Context context, boolean usePlugin) {
         sContext = context;
-        JRouteHelper.loadRoute(sContext);
+        if (usePlugin) {
+            JRouteHelper.injectRouteModuleByPlugin();
+        } else {
+            JRouteHelper.loadRoute(sContext);
+        }
     }
 
     public static Context context() {
@@ -44,7 +52,7 @@ public class JRouter {
         return jPostCard;
     }
 
-    public static String parseGroup(String path) {
+    private static String parseGroup(String path) {
         if (path == null) throw new IllegalArgumentException("path can not be null");
         if (!path.startsWith("/")) throw new IllegalArgumentException("path can not be null");
         String group = path.substring(1, path.lastIndexOf("/"));

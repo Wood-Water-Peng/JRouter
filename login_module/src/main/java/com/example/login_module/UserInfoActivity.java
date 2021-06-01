@@ -33,8 +33,8 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
-        Repository.getInstance().putString("uid","");
-        Repository.getInstance().putString("token","");
+        Repository.getInstance().putUid("uid");
+        Repository.getInstance().putToken("token");
         JRouter.path("/login_module/LoginActivity").navigate(this);
         finish();
     }

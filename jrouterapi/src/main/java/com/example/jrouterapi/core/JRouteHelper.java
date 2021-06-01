@@ -21,11 +21,11 @@ public class JRouteHelper {
 
     //找到apt生成的所有模块辅助类，理论上每一个模块一个辅助类
     public static void loadRoute(Context context) {
-        injectRouteModuleByPlugin();
+        injectRouteModule(context);
 
     }
 
-    private void injectRouteModule(Context context) {
+    private static void injectRouteModule(Context context) {
         try {
             List<String> className = Utils.getClassName(context, "com.example.jrouter");
             for (String name :
@@ -60,7 +60,7 @@ public class JRouteHelper {
 
     //for asm
     private static void register(IRouteModule module) {
-        Log.i(TAG,"register->"+module.getClass().getCanonicalName());
+        Log.i(TAG, "register->" + module.getClass().getCanonicalName());
         JRouterWarehouse.injectModule(module);
     }
 }
