@@ -2,8 +2,12 @@ package com.example.jrouter;
 
 import android.app.Application;
 
+import com.example.base_lib.JLogUtil;
 import com.example.jrouterapi.core.JRouter;
 import com.example.jrouterapi.module.ModuleHelper;
+import com.example.perttask.PertGraph;
+import com.example.perttask.PertGraphManager;
+import com.example.perttask.Task;
 
 /**
  * @Author jacky.peng
@@ -17,5 +21,14 @@ public class MainApplication extends Application {
         JRouter.init(this);
 //        ModuleHelper.registerModule("home_module");
         ModuleHelper.registerModule("login_module");
+
+        PertGraph mainApplication_graph = new PertGraph("MainApplication graph");
+        mainApplication_graph.addTask(new Task("MainApplicationTask") {
+            @Override
+            public void call() {
+                JLogUtil.log(getName() + " is running...on thread ->"+Thread.currentThread().getName());
+            }
+        });
+//        PertGraphManager.getInstance().addGraphTask(mainApplication_graph).start();
     }
 }

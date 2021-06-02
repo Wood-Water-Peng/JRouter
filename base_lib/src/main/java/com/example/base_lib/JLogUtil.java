@@ -10,11 +10,13 @@ import android.util.Log;
 public class JLogUtil {
     public static final String MODULE_TAG = "MODULE_TAG";
 
-    public static void log() {
-
+    public static void log(String msg) {
+        Log.d(MODULE_TAG, msg);
     }
 
     public static void log(String tag, String msg) {
         Log.d(tag, msg);
     }
+
+
 }

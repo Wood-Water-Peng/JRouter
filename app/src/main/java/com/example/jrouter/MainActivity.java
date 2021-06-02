@@ -10,12 +10,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.base_lib.JLogUtil;
 import com.example.home_module.HomeActivity;
 import com.example.jrouterapi.JPostcard;
 import com.example.jrouterapi.core.JRouter;
 import com.example.jrouterapi.interceptor.IRouteInterceptor;
 import com.example.jrouterapi.service.ServiceCenter;
 import com.example.login_module_export.IUserService;
+import com.example.perttask.PertGraph;
+import com.example.perttask.PertGraphManager;
+import com.example.perttask.Task;
+import com.example.perttask.TaskLifeCycleListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +29,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JLogUtil.log(Thread.currentThread().getName() + " started");
+                PertGraph splashActivityGraph3 = new PertGraph("MainActivityGraph3");
+                splashActivityGraph3
+                        .addTask(new LoadADTask("loadADTask3"))
+                        .addTask(new LoadConfigTask("loadConfigTask3"))
+                        .addTask("taskA3").dependOn("taskB3")
+                        .addTask("taskB3").dependOn("taskC3")
+                        .addTask("taskC3")
+                        .addTask("taskE3");
+
+                PertGraph splashActivityGraph4 = new PertGraph("MainActivityGraph4");
+                splashActivityGraph4
+                        .addTask(new LoadADTask("loadADTask4"))
+                        .addTask(new LoadConfigTask("loadConfigTask4"))
+                        .addTask("taskA4")
+                        .addTask("taskE4");
+
+                PertGraphManager.getInstance()
+                        .addGraphTask(splashActivityGraph3)
+                        .addGraphTask(splashActivityGraph4)
+                        .start()
+                        .waitUntilFinish();
+                JLogUtil.log(Thread.currentThread().getName() + " finished");
+            }
+        }).start();
     }
 
     public void jump(View v) {

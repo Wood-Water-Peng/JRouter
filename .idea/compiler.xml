@@ -28,6 +28,7 @@
       <module name="JRouter.jrouterapi" target="11" />
       <module name="JRouter.login_module" target="11" />
       <module name="JRouter.login_module_export" target="11" />
+      <module name="JRouter.pert_task" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
