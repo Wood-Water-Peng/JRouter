@@ -10,7 +10,7 @@ public class Constants {
     public static final String CLASS_NAME_DIVIDER = "$$";
     public static final String PACKAGE_NAME = "com.example.jrouter";
     public static final String CONTEXT = "android.content.Context";
-
+    public static final CharSequence FRAGMENT = "androidx.fragment.app.Fragment";
     //对应着各module在build.gradle中生成的注解处理器相关字段
     public static final String KEY_MODULE_NAME = "JROUTER_MODULE_NAME";
 
@@ -20,6 +20,7 @@ public class Constants {
     public static final String JRouterInterceptor = "com.example.jrouterapi.interceptor.IRouteInterceptor";
     public static final String IRouteMapInterface = "com.example.jrouterapi.IRouteMap";
     public static final String IModuleServiceInterface = "com.example.jrouterapi.service.IModuleService";
+    public static final String IModuleFragmentInterface = "com.example.jrouterapi.fragment.IModuleFragment";
 
     /**
      * 模块相关
@@ -69,6 +70,16 @@ public class Constants {
     //服务辅助类类名
     public static final String CLASS_SERVICE_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "Service" + CLASS_NAME_DIVIDER;
 
+
+    /**
+     * fragment
+     */
+
+    public static final String MODULE_FRAGMENT_HELPER = "com.example.jrouterapi.fragment.FragmentHelper";
+
+    public static final String PACKAGE_NAME_FRAGMENT_MODULE_PREFIX = PACKAGE_NAME + ".fragment";
+
+    public static final String CLASS_FRAGMENT_NAME_PREFIX = PROJECT_NAME + CLASS_NAME_DIVIDER + "Fragment" + CLASS_NAME_DIVIDER;
     //logger
 
     // Log

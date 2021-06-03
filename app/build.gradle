@@ -30,6 +30,7 @@ dependencies {
     implementation rootProject.ext.dependencies.android.support.appcompat
     implementation rootProject.ext.dependencies.android.support.constraintlayout
     implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     debugImplementation rootProject.ext.dependencies.leakcanary
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

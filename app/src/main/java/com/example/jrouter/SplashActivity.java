@@ -60,15 +60,16 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-        PertGraphManager.getInstance()
-                .addGraphTask(splashActivityGraph)
-                .addGraphTask(splashActivityGraph2)
-                .start()
-                .waitUntilFinish();
+//        PertGraphManager.getInstance()
+//                .addGraphTask(splashActivityGraph)
+//                .addGraphTask(splashActivityGraph2)
+//                .start()
+//                .waitUntilFinish();
         SplashActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
             }
         });
     }

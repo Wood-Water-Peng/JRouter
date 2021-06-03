@@ -21,6 +21,7 @@ public class MainApplication extends Application {
         JRouter.init(this);
 //        ModuleHelper.registerModule("home_module");
         ModuleHelper.registerModule("login_module");
+        ModuleHelper.registerModule("home_module");
 
         PertGraph mainApplication_graph = new PertGraph("MainApplication graph");
         mainApplication_graph.addTask(new Task("MainApplicationTask") {
