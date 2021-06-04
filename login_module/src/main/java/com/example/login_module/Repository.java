@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.login_module_export.User;
+import com.google.gson.Gson;
 
 /**
  * @Author jacky.peng
@@ -16,7 +17,6 @@ import com.example.login_module_export.User;
 public class Repository {
 
     public static final String SP_KEY_UID = "sp_key_uid";
-    public static final String SP_KEY_NAME = "sp_key_name";
     Context context;
     SharedPreferences sharedPref;
     User user;
@@ -41,53 +41,52 @@ public class Repository {
         sharedPref.edit().putString(key, value).apply();
     }
 
-    private String getUid() {
+    private String getUserFromSp() {
         return sharedPref.getString(SP_KEY_UID, "");
     }
 
-    private String getToken() {
-        return sharedPref.getString(SP_KEY_NAME, "");
-    }
 
-    private void putUid(String value) {
+    private void putUerInfo(String value) {
         sharedPref.edit().putString(SP_KEY_UID, value).apply();
-    }
-
-    private void putUserName(String userName) {
-        sharedPref.edit().putString(SP_KEY_NAME, userName).apply();
     }
 
     MutableLiveData<User> mutableLiveData = new MutableLiveData<>();
 
-    public void login(String name, String psw) {
+    public void login(String name) {
         user = new User(name);
-        mutableLiveData.postValue(new User(user.getName()));
+        if (name.equals("admin")) {
+            user.setLevel(2);
+        } else if (name.equals("jacky")) {
+            user.setLevel(1);
+        } else {
+            user.setLevel(0);
+        }
+        user.setLogin(true);
+        Gson gson = new Gson();
+        mutableLiveData.postValue(new User(user.getName(),user.getLevel()));
         //保存在SP
-        putUid(name);
+        putUerInfo(gson.toJson(user));
     }
 
     public void logout() {
         user = null;
         mutableLiveData.postValue(null);
         //更新SP
-        putUid("");
+        putUerInfo("");
     }
 
-
-    private String getUidFromSp() {
-        return getUid();
-    }
 
     public User getUser() {
         if (user == null) {
-            String uid = getUidFromSp();
-            if (!TextUtils.isEmpty(uid)) {
-                user = new User(uid);
+            String userJson = getUserFromSp();
+            if (!TextUtils.isEmpty(userJson)) {
+                Gson gson = new Gson();
+                user = gson.fromJson(userJson, User.class);
             }
         }
         //clone
         if (user != null) {
-            return new User(user.getName());
+            return new User(user.getName(),user.getLevel());
         }
         return null;
     }

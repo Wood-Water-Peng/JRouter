@@ -74,9 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                     updateUiWithUser(loginResult.getSuccess());
                 }
 
-                Intent intent = new Intent();
-                intent.putExtra("user",new User(loginResult.getSuccess().getDisplayName()));
-                setResult(RESULT_OK,intent);
+                setResult(RESULT_OK);
 
                 //Complete and destroy login activity once successful
                 finish();

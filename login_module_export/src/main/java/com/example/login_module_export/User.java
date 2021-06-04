@@ -11,8 +11,7 @@ import android.os.Parcelable;
  * 暴露给其他模块的用户类
  */
 public class User implements Parcelable {
-    String name;
-    String token;
+    private String name;
     //0-普通用户   1-VIP用户   2-管理员
     int level = 0;
     boolean isLogin;
@@ -20,14 +19,27 @@ public class User implements Parcelable {
     public User(String name) {
         this.name = name;
     }
+    public User(String name,int level) {
+        this.name = name;
+        this.level=level;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
 
     public String getName() {
         return name;
     }
 
-    public String getToken() {
-        return token;
-    }
 
     public int getLevel() {
         return level;
@@ -39,7 +51,6 @@ public class User implements Parcelable {
 
     protected User(Parcel in) {
         name = in.readString();
-        token = in.readString();
         level = in.readInt();
         isLogin = in.readByte() != 0;
     }
@@ -64,7 +75,6 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeString(token);
         dest.writeInt(level);
         dest.writeByte((byte) (isLogin ? 1 : 0));
     }

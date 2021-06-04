@@ -42,7 +42,7 @@ public class LoginRepository {
     private void setLoggedInUser(LoggedInUser user) {
         this.user = user;
        //将数据保存在SP中
-        Repository.getInstance().login(user.getUserId(),user.getDisplayName());
+        Repository.getInstance().login(user.getDisplayName());
     }
 
     public Result<LoggedInUser> login(String username, String password) {

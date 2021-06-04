@@ -91,7 +91,6 @@ public class UserCenterFragment extends Fragment {
                 }
             });
             tvUid.setText(user.getName());
-            tvToken.setText(user.getToken());
         }
     }
 
