@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import com.example.annotation.InterceptorAnno;
 import com.example.jrouterapi.JPostcard;
 import com.example.jrouterapi.interceptor.IRouteInterceptor;
+import com.example.jrouterapi.service.ServiceCenter;
+import com.example.login_module_export.IUserService;
 
 /**
  * @Author jacky.peng
@@ -19,19 +21,12 @@ public class LoginAuthInterceptor implements IRouteInterceptor {
     @Override
     public void intercept(@NonNull Chain chain, @NonNull Callback callback) {
         JPostcard jPostcard = chain.navigate();
-        if(checkToken(Repository.getInstance().getUid(),Repository.getInstance().getToken())){
+        IUserService userService = (IUserService) ServiceCenter.getService(IUserService.name);
+        if (userService != null && userService.getUser() != null) {
             chain.proceed(jPostcard);
-        }else {
-            Exception exception = new Exception("invalidate uid");
+        } else {
+            Exception exception = new Exception("login first");
             chain.interrupt(exception);
         }
-    }
-
-    private boolean checkToken(String uid, String token) {
-        if (TextUtils.isEmpty(uid) || TextUtils.isEmpty(token)) return false;
-        if (uid.equals("admin") && token.equals("admin")) {
-            return true;
-        }
-        return false;
     }
 }

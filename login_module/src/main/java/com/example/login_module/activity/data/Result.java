@@ -1,4 +1,4 @@
-package com.example.login_module.fragment.data;
+package com.example.login_module.activity.data;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

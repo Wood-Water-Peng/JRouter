@@ -1,4 +1,4 @@
-package com.example.login_module.fragment.ui.login;
+package com.example.login_module.activity.ui.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel;
 import android.util.Patterns;
 
 import com.example.login_module.R;
-import com.example.login_module.fragment.data.LoginRepository;
-import com.example.login_module.fragment.data.Result;
-import com.example.login_module.fragment.data.model.LoggedInUser;
+import com.example.login_module.activity.data.LoginRepository;
+import com.example.login_module.activity.data.Result;
+import com.example.login_module.activity.data.model.LoggedInUser;
 
 public class LoginViewModel extends ViewModel {
 

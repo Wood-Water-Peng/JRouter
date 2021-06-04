@@ -2,6 +2,8 @@ package com.example.login_module.service;
 
 import android.text.TextUtils;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.annotation.JServiceAnno;
 import com.example.login_module.Repository;
 import com.example.login_module_export.IUserService;
@@ -16,13 +18,20 @@ import com.example.login_module_export.User;
  */
 @JServiceAnno(name = IUserService.name)
 public class UserServiceImpl implements IUserService {
+
+
     @Override
     public User getUser() {
-        String uid = Repository.getInstance().getUid();
-        String token = Repository.getInstance().getToken();
-        if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(token)) {
-            return new User(uid, token);
-        }
-        return null;
+        return Repository.getInstance().getUser();
+    }
+
+    @Override
+    public MutableLiveData<User> getUserLiveData() {
+        return Repository.getInstance().getMutableLiveData();
+    }
+
+    @Override
+    public void logout() {
+        Repository.getInstance().logout();
     }
 }

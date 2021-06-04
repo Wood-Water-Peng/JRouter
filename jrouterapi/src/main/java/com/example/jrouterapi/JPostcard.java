@@ -26,6 +26,7 @@ public class JPostcard {
     String path;
     Class<?> targetClass;
     private Bundle params;
+    int requestCode = -1;
 
     public String getGroup() {
         return group;
@@ -84,6 +85,14 @@ public class JPostcard {
         navigate(context, null);
     }
 
+    public JPostcard withRequestCode(int requestCode) {
+        if (requestCode == -1) {
+            throw new IllegalArgumentException("requestCode cannot be -1");
+        }
+        this.requestCode = requestCode;
+        return this;
+    }
+
     public JPostcard withParam(Bundle bundle) {
         if (params == null) {
             params = bundle;
@@ -100,8 +109,14 @@ public class JPostcard {
         }
         if (!(context instanceof Activity)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            if (requestCode == -1) {
+                context.startActivity(intent);
+            } else {
+                ((Activity) context).startActivityForResult(intent, requestCode);
+            }
         }
-        context.startActivity(intent);
     }
 
 }

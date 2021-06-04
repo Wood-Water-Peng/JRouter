@@ -1,4 +1,4 @@
-package com.example.login_module.fragment.data.model;
+package com.example.login_module.activity.data.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

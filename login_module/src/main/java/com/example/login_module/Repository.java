@@ -2,6 +2,11 @@ package com.example.login_module;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.login_module_export.User;
 
 /**
  * @Author jacky.peng
@@ -11,10 +16,10 @@ import android.content.SharedPreferences;
 public class Repository {
 
     public static final String SP_KEY_UID = "sp_key_uid";
-    public static final String SP_KEY_TOKEN = "sp_key_token";
+    public static final String SP_KEY_NAME = "sp_key_name";
     Context context;
     SharedPreferences sharedPref;
-
+    User user;
     private static Repository sRepository;
 
     public static Repository getInstance() {
@@ -36,19 +41,58 @@ public class Repository {
         sharedPref.edit().putString(key, value).apply();
     }
 
-    public String getUid() {
+    private String getUid() {
         return sharedPref.getString(SP_KEY_UID, "");
     }
 
-    public String getToken() {
-        return sharedPref.getString(SP_KEY_TOKEN, "");
+    private String getToken() {
+        return sharedPref.getString(SP_KEY_NAME, "");
     }
 
-    public void putUid(String value) {
+    private void putUid(String value) {
         sharedPref.edit().putString(SP_KEY_UID, value).apply();
     }
 
-    public void putToken(String token) {
-        sharedPref.edit().putString(SP_KEY_TOKEN, token).apply();
+    private void putUserName(String userName) {
+        sharedPref.edit().putString(SP_KEY_NAME, userName).apply();
+    }
+
+    MutableLiveData<User> mutableLiveData = new MutableLiveData<>();
+
+    public void login(String name, String psw) {
+        user = new User(name);
+        mutableLiveData.postValue(new User(user.getName()));
+        //保存在SP
+        putUid(name);
+    }
+
+    public void logout() {
+        user = null;
+        mutableLiveData.postValue(null);
+        //更新SP
+        putUid("");
+    }
+
+
+    private String getUidFromSp() {
+        return getUid();
+    }
+
+    public User getUser() {
+        if (user == null) {
+            String uid = getUidFromSp();
+            if (!TextUtils.isEmpty(uid)) {
+                user = new User(uid);
+            }
+        }
+        //clone
+        if (user != null) {
+            return new User(user.getName());
+        }
+        return null;
+    }
+
+    public MutableLiveData<User> getMutableLiveData() {
+        return mutableLiveData;
     }
 }

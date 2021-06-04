@@ -1,5 +1,6 @@
 package com.example.jrouter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.base_lib.JLogUtil;
@@ -21,6 +23,7 @@ import com.example.jrouterapi.fragment.FragmentHelper;
 import com.example.jrouterapi.interceptor.IRouteInterceptor;
 import com.example.jrouterapi.service.ServiceCenter;
 import com.example.login_module_export.IUserService;
+import com.example.login_module_export.User;
 import com.example.perttask.PertGraph;
 import com.example.perttask.PertGraphManager;
 import com.google.android.material.tabs.TabLayout;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     private static List<TabWrapper> tabWrappers;
+    private TabAdapter tabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,35 +47,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewpager);
-        tabWrappers = generateFragmentTitles();
-        viewPager.setAdapter(new TabAdapter(getSupportFragmentManager(), 0));
-        tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.addTab(new TabLayout.Tab(){
-//            @Nullable
-//            @org.jetbrains.annotations.Nullable
-//            @Override
-//            public CharSequence getText() {
-//                return "主页";
-//            }
-//        });
-//
-//        tabLayout.addTab(new TabLayout.Tab(){
-//            @Nullable
-//            @org.jetbrains.annotations.Nullable
-//            @Override
-//            public CharSequence getText() {
-//                return "附近";
-//            }
-//        });
-//        tabLayout.addTab(new TabLayout.Tab(){
-//            @Nullable
-//            @org.jetbrains.annotations.Nullable
-//            @Override
-//            public CharSequence getText() {
-//                return "我的";
-//            }
-//        });
 
+        IUserService userService = (IUserService) ServiceCenter.getService(IUserService.name);
+        if (userService != null) {
+            tabWrappers = generateFragmentTitles(userService.getUser());
+        }
+
+        userService.getUserLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user == null) {
+                    //退出登录
+                    tabWrappers.get(tabAdapter.getCount() - 1).title = "用户(未登录)";
+                    tabAdapter.notifyDataSetChanged();
+                } else {
+                    //更新UI
+                    if (user.getLevel() == 0) {
+                        tabWrappers.get(tabAdapter.getCount() - 1).title = "普通用户";
+                    } else if (user.getLevel() == 1) {
+                        tabWrappers.get(tabAdapter.getCount() - 1).title = "VIP用户";
+                    } else if (user.getLevel() == 2) {
+                        tabWrappers.get(tabAdapter.getCount() - 1).title = "老板";
+                    }
+                    tabAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        tabAdapter = new TabAdapter(getSupportFragmentManager(), 0);
+        viewPager.setAdapter(tabAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void test() {
@@ -179,35 +183,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //根据用户的登录状态或者身份动态显示tab
-    private List<TabWrapper> generateFragmentTitles() {
-        int r = new Random().nextInt(3);
+    private List<TabWrapper> generateFragmentTitles(User user) {
+
         List<TabWrapper> list = new ArrayList<>();
-        if (r == 0) {
+        if (user == null) {
             //未登录
             list.add(new TabWrapper("首页", FragmentHelper.getFragment("/home_module/HomeFragment", null)));
             list.add(new TabWrapper("钱包", new EmptyFragment()));
-            Bundle bundle = new Bundle();
-            list.add(new TabWrapper("未登录", FragmentHelper.getFragment("/login_module/LoginFragment", null)));
-        } else if (r == 1) {
+            list.add(new TabWrapper("未登录", FragmentHelper.getFragment("/login_module/UserCenterFragment", null)));
+        } else if (user.getLevel() == 0) {
             //普通用户
             list.add(new TabWrapper("首页", FragmentHelper.getFragment("/home_module/HomeFragment", null)));
             list.add(new TabWrapper("钱包", new EmptyFragment()));
             Bundle bundle = new Bundle();
-            bundle.putString("uid", "uid");
-            bundle.putString("token", "token");
-            list.add(new TabWrapper("普通用户", FragmentHelper.getFragment("/login_module/LoginFragment", bundle)));
-        } else {
+            bundle.putParcelable("user", user);
+            list.add(new TabWrapper("普通用户", FragmentHelper.getFragment("/login_module/UserCenterFragment", bundle)));
+        } else if (user.getLevel() == 1) {
             //VIP
             list.add(new TabWrapper("首页", FragmentHelper.getFragment("/home_module/HomeFragment", null)));
             list.add(new TabWrapper("钱包", new EmptyFragment()));
             Bundle bundle = new Bundle();
             bundle.putString("uid", "uid");
             bundle.putString("token", "token");
-            list.add(new TabWrapper("VIP用户", FragmentHelper.getFragment("/login_module/LoginFragment", bundle)));
+            list.add(new TabWrapper("VIP用户", FragmentHelper.getFragment("/login_module/UserCenterFragment", bundle)));
         }
         return list;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     static class TabWrapper {
         String title;

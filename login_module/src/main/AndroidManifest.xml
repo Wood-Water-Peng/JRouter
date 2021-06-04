@@ -3,8 +3,8 @@
     package="com.example.login_module">
 
     <application>
-        <activity android:name=".UserInfoActivity"></activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".activity.ui.login.LoginActivity" />
+        <activity android:name=".UserInfoActivity" />
     </application>
 
 </manifest>

@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.JRouter" parent="Theme.MaterialComponents.Light" />
+</resources>

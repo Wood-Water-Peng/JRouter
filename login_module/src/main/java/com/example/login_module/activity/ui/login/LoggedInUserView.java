@@ -1,4 +1,4 @@
-package com.example.login_module.fragment.ui.login;
+package com.example.login_module.activity.ui.login;
 
 /**
  * Class exposing authenticated user details to the UI.
