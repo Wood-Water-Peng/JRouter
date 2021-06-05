@@ -20,15 +20,6 @@
         <module name="JRouter.anno_processor" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
-      <module name="JRouter.app" target="11" />
-      <module name="JRouter.base_lib" target="11" />
-      <module name="JRouter.debugdemo.login_debug_shell" target="11" />
-      <module name="JRouter.home_module" target="11" />
-      <module name="JRouter.jrouterapi" target="11" />
-      <module name="JRouter.login_module" target="11" />
-      <module name="JRouter.login_module_export" target="11" />
-      <module name="JRouter.pert_task" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.annotation.JRouterAnno;
 import com.example.login_module.R;
-import com.example.login_module_export.User;
 
 @JRouterAnno(path = "/login_module/LoginActivity")
 public class LoginActivity extends AppCompatActivity {
