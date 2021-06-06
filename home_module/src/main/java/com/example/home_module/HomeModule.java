@@ -13,13 +13,16 @@ import com.example.jrouterapi.module.IModuleInterface;
  */
 @JModuleAnno
 public class HomeModule implements IModuleInterface {
+    public static Context sContext;
+
     @Override
     public void onCreated(Context context) {
-        JLogUtil.log(JLogUtil.MODULE_TAG,"HomeModule onCreated");
+        JLogUtil.log(JLogUtil.MODULE_TAG, "HomeModule onCreated");
+        sContext = context;
     }
 
     @Override
     public void onDestroy() {
-        JLogUtil.log(JLogUtil.MODULE_TAG,"HomeModule onDestroy");
+        JLogUtil.log(JLogUtil.MODULE_TAG, "HomeModule onDestroy");
     }
 }
